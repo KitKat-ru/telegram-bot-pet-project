@@ -1,12 +1,14 @@
 """Теоретическое задание."""
 import logging
 import os
+import sys
 from datetime import datetime as dt
 from dateutil.tz import tzlocal
 
 from random import randint
 
 import requests
+from logging import StreamHandler
 from dotenv import load_dotenv
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
@@ -20,11 +22,20 @@ URL = 'https://api.thecatapi.com/v1/images/search'
 URL_IP = 'http://ip-api.com/json'
 
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO,
-    encoding='utf-8',
+    level=logging.DEBUG,
     filename='kitty_bot.log',
-    )
+    encoding='utf-8',
+    format='%(asctime)s, %(levelname)s, %(funcName)s, %(message)s'
+)
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+handler = StreamHandler(sys.stdout)
+logger.addHandler(handler)
+formatter = logging.Formatter(
+    '%(asctime)s - %(funcName)s - %(levelname)s - %(message)s - %(lineno)s '
+)
+handler.setFormatter(formatter)
 
 
 def get_new_image():
@@ -32,7 +43,7 @@ def get_new_image():
     try:
         response = requests.get(URL)
     except Exception as error:
-        logging.error(f'Ошибка при запросе к основному API: {error}')
+        logger.error(f'Ошибка при запросе к основному API: {error}')
         new_url = 'https://api.thedogapi.com/v1/images/search'
         response = requests.get(new_url)
     response = response.json()
@@ -45,7 +56,7 @@ def get_ip():
     try:
         response = requests.get(URL_IP).json()
     except Exception as error:
-        logging.error(f'Ошибка при запросе к основному API: {error}')
+        logger.error(f'Ошибка при запросе к основному API: {error}')
         return 'Сервер не доступен'
     show_ip = response.get('query')
     return f'Ваш IP-adress - {show_ip}'
@@ -113,19 +124,26 @@ def wake_up(update, context):
 
 def main():
     """Основная логика бота."""
-    updater = Updater(token=secret_token)
+    try:
+        updater = Updater(token=secret_token)
 
-    updater.dispatcher.add_handler(CommandHandler('start', wake_up))
-    updater.dispatcher.add_handler(
-        CommandHandler('random_digit', random_digit)
-    )
-    updater.dispatcher.add_handler(CommandHandler('new_cat', new_cat))
-    updater.dispatcher.add_handler(CommandHandler('time', date_now))
-    updater.dispatcher.add_handler(CommandHandler('show_my_ip', show_my_ip))
-    updater.dispatcher.add_handler(MessageHandler(Filters.text, say_hi))
+        updater.dispatcher.add_handler(CommandHandler('start', wake_up))
+        updater.dispatcher.add_handler(
+            CommandHandler('random_digit', random_digit)
+        )
+        updater.dispatcher.add_handler(CommandHandler('new_cat', new_cat))
+        updater.dispatcher.add_handler(CommandHandler('time', date_now))
+        updater.dispatcher.add_handler(CommandHandler(
+            'show_my_ip', show_my_ip)
+        )
+        updater.dispatcher.add_handler(MessageHandler(Filters.text, say_hi))
 
-    updater.start_polling()
-    updater.idle()
+        updater.start_polling()
+        updater.idle()
+    except Exception as error:
+        error_message = f'Произошел сбой в программе, Ошибка - {error}!'
+        logger.error(error_message)
+        exit()
 
 
 if __name__ == '__main__':
