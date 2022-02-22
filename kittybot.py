@@ -3,9 +3,11 @@ import logging
 import os
 import sys
 from datetime import datetime as dt
-from dateutil.tz import tzlocal
+# from dateutil.tz import tzlocal
+import datetime
 
 from random import randint
+
 
 import requests
 from logging import StreamHandler
@@ -77,13 +79,13 @@ def new_cat(update, context):
 def date_now(update, context):
     """Команда которая показывает текущее время."""
     chat = update.effective_chat
-    local = dt.now(tzlocal()).tzname()
-    msk = dt.now(tzlocal())
+    # local = dt.now(tzlocal()).tzname()
+    delta = datetime.timedelta(hours=3, minutes=0)
+    msk = dt.now() + delta
     is_date_msk = msk.strftime('%H:%M Дата - %A %d %b %Y')
     context.bot.send_message(
         chat_id=chat.id, text=(
-            f'Время в Москве - {is_date_msk}' '\n'
-            f'UTC -{local}'
+            f'Время в Москве - {is_date_msk}'
         )
     )
 
