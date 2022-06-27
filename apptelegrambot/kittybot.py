@@ -1,9 +1,8 @@
-"""Теоретическое задание."""
 import logging
 import os
 import sys
 from datetime import datetime as dt
-# from dateutil.tz import tzlocal
+
 import datetime
 
 from random import randint
@@ -11,12 +10,9 @@ from random import randint
 
 import requests
 from logging import StreamHandler
-from dotenv import load_dotenv
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
-
-load_dotenv()
 
 secret_token = os.getenv('TOKEN')
 
@@ -25,7 +21,7 @@ URL_IP = 'http://ip-api.com/json'
 
 logging.basicConfig(
     level=logging.DEBUG,
-    filename='kitty_bot.log',
+    filename='../kitty_bot.log',
     encoding='utf-8',
     format='%(asctime)s, %(levelname)s, %(funcName)s, %(message)s'
 )
