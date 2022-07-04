@@ -1,23 +1,21 @@
+import datetime
 import logging
 import os
 import sys
 from datetime import datetime as dt
-
-import datetime
-
+from logging import StreamHandler
 from random import randint
 
-from dotenv import load_dotenv
-
 import requests
-from logging import StreamHandler
+from dotenv import load_dotenv
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
-
 load_dotenv()
 
-secret_token = os.getenv('TOKEN')
+secret_token = os.getenv(
+    'TOKEN', default='0000000000:QWERTYUIOPASDFGHJK-zAxZxZ_ZXCVSA111'
+)
 
 URL = 'https://api.thecatapi.com/v1/images/search'
 URL_IP = 'http://ip-api.com/json'
