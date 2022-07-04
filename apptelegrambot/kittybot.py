@@ -7,12 +7,15 @@ import datetime
 
 from random import randint
 
+from dotenv import load_dotenv
 
 import requests
 from logging import StreamHandler
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
+
+load_dotenv()
 
 secret_token = os.getenv('TOKEN')
 
