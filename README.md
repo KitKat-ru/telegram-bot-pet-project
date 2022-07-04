@@ -6,7 +6,7 @@
 Python3.9, Django2.2, python-telegram-bot, dotenv, Docker, Яндекс.Облако, Logging
 
 ## Пример файла `.env`:
-  
+  TOKEN=0000000000:QWERTYUIOPASDFGHJK-zAxZxZ_ZXCVSA111
 
 ### Переменные окружения
 Для работы бота необходимо предоставить следующие переменные окружения:
