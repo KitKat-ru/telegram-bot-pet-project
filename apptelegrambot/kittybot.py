@@ -76,7 +76,6 @@ def new_cat(update, context):
 def date_now(update, context):
     """Команда которая показывает текущее время."""
     chat = update.effective_chat
-    # local = dt.now(tzlocal()).tzname()
     delta = datetime.timedelta(hours=3, minutes=0)
     msk = dt.now() + delta
     is_date_msk = msk.strftime('%H:%M Дата - %A %d %b %Y')
